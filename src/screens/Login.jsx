@@ -33,9 +33,7 @@ const Login = () => {
           value={Password}
         />
 
-        <Button title='Login' color="#e9511f"/>
-
-
+        <Button title="Login" />
       </View>
     </View>
   );
