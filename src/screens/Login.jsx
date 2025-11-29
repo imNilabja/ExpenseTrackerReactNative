@@ -1,5 +1,5 @@
 /* eslint-disable react/self-closing-comp */
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Platform, Alert } from 'react-native';
 import React from 'react';
 import { TextInput } from 'react-native';
 import { useState } from 'react';
@@ -12,15 +12,53 @@ const Login = () => {
   const [Username, setUsername] = useState('');
   const [Password, setPassword] = useState('');
 
+    // Use emulator-host mapping for Android; use localhost for iOS/simulators
+    const getHost = () => {
+      if (Platform.OS === 'android') {
+        // Android emulator -> host machine
+        return '10.0.2.2:8080';
+      }
+      return 'localhost:8080';
+    };
+
+    const IP = getHost();
+
   const handleUsername = e => {
     setUsername(e);
   };
   const handlePassword = e => {
     setPassword(e);
   };
-   const handleRegister = e => {
+  const handleRegister = e => {
     navigation.navigate('Register');
   };
+
+  const handleLogin = async e => {
+    try {
+      const Response = await fetch(
+        `http://${IP}/loginUser/${Username}/${Password}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userName: Username, userPassword: Password }),
+        },
+      );
+
+      if (!Response.ok) {
+        throw new Error(`Server responded with ${Response.status}`);
+      }
+
+      const data = await Response.json();
+      console.log(data);
+      if(data){
+        navigation.navigate('Register');
+      }
+    } catch (err) {
+      console.log('Login error', err);
+      Alert.alert('Network error', err.message || 'Request failed');
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.inputBox}>
@@ -39,11 +77,14 @@ const Login = () => {
           value={Password}
         />
 
-        <Button title='Login' color="#ce5a0dff" width='150'/>
-        <Text style={{fontSize:10}}>don't have an account?
-          <Text style={{ color:'blue'}} onPress={handleRegister}> Register</Text>
+        <Button title="Login" color="#ce5a0dff" width="150" onPress={handleLogin}/>
+        <Text style={{ fontSize: 10 }}>
+          don't have an account?
+          <Text style={{ color: 'blue' }} onPress={handleRegister}>
+            {' '}
+            Register
+          </Text>
         </Text>
-
       </View>
     </SafeAreaView>
   );
@@ -60,8 +101,8 @@ const styles = StyleSheet.create({
   },
   inputBox: {
     height: '40%',
-    width: '60%', 
-    borderWidth: 3, 
+    width: '60%',
+    borderWidth: 3,
     borderColor: '#ccc',
     borderRadius: 10,
     paddingHorizontal: 10,
@@ -72,7 +113,7 @@ const styles = StyleSheet.create({
   textInput: {
     height: 45,
     width: '80%',
-    borderWidth: 2, 
+    borderWidth: 2,
     borderColor: '#ccc',
     color: 'black',
     borderRadius: 5,
