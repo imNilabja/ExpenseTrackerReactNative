@@ -1,4 +1,5 @@
-/* eslint-disable react/self-closing-comp */
+/* eslint-disable react-native/no-inline-styles */
+
 import { StyleSheet, Text, View, Platform, Alert } from 'react-native';
 import React from 'react';
 import { TextInput } from 'react-native';
@@ -51,7 +52,7 @@ const Login = () => {
       const data = await Response.json();
       console.log(data);
       if(data){
-        navigation.navigate('Register');
+        navigation.navigate('Explore');
       }
     } catch (err) {
       console.log('Login error', err);

@@ -1,4 +1,6 @@
-import { StyleSheet, Text, View } from 'react-native';
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-native/no-inline-styles */
+import { StyleSheet, Text, View, Platform, Alert } from 'react-native';
 import React from 'react';
 import { TextInput } from 'react-native';
 import { useState } from 'react';
@@ -11,7 +13,15 @@ const Register = () => {
   const [Username, setUsername] = useState('');
   const [Password, setPassword] = useState('');
   const [Email, setEmail] = useState('');
+  const getHost = () => {
+    if (Platform.OS === 'android') {
+      // Android emulator -> host machine
+      return '10.0.2.2:8080';
+    }
+    return 'localhost:8080';
+  };
 
+  const IP = getHost();
   const handleUsername = e => {
     setUsername(e);
   };
@@ -24,6 +34,33 @@ const Register = () => {
   const handleLogin = e => {
     navigation.navigate('Login');
   };
+
+  const handleRegister = async () => {
+   try{
+     const Response = await fetch(
+      `http://${IP}/addUser`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          userName: Username, 
+          userPassword: Password,
+          userEmail: Email
+        }),
+      },
+    );
+
+    setEmail('');
+    setPassword('');
+    setUsername('');
+   }catch(err){
+    console.log('Registration error', err);
+    Alert.alert('Network error', err.message || 'Request failed');
+   }
+  };
+
+
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.inputBox}>
@@ -40,6 +77,7 @@ const Register = () => {
           placeholder="password"
           onChangeText={handlePassword}
           value={Password}
+          password
         />
 
         <TextInput
@@ -49,7 +87,7 @@ const Register = () => {
           value={Email}
         />
 
-        <Button title="Register" color="#ce5a0dff" width="150" />
+        <Button title="Register" color="#ce5a0dff" width="150" onPress={handleRegister}/>
         <Text style={{ fontSize: 10 }}>
           Already have an account?
           <Text style={{ color: 'blue' }} onPress={handleLogin}>
