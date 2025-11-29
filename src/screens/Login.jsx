@@ -4,8 +4,11 @@ import React from 'react';
 import { TextInput } from 'react-native';
 import { useState } from 'react';
 import { Button } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Login = () => {
+  const navigation = useNavigation();
   const [Username, setUsername] = useState('');
   const [Password, setPassword] = useState('');
 
@@ -15,8 +18,11 @@ const Login = () => {
   const handlePassword = e => {
     setPassword(e);
   };
+   const handleRegister = e => {
+    navigation.navigate('Register');
+  };
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.inputBox}>
         <Text style={{ fontWeight: 'bold', fontSize: 25 }}>Login</Text>
         <TextInput
@@ -33,9 +39,13 @@ const Login = () => {
           value={Password}
         />
 
-        <Button title="Login" />
+        <Button title='Login' color="#ce5a0dff" width='150'/>
+        <Text style={{fontSize:10}}>don't have an account?
+          <Text style={{ color:'blue'}} onPress={handleRegister}> Register</Text>
+        </Text>
+
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -43,17 +53,17 @@ export default Login;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#e9511f',
+    backgroundColor: '#e23e07ff',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
   inputBox: {
-    height: 400,
-    width: 270, // Increased width to be visible
-    borderWidth: 2, // Use borderWidth (for thickness)
-    borderColor: '#ccc', // Use borderColor (for color)
-    borderRadius: 10, // Optional: Add rounded corners
+    height: '40%',
+    width: '60%', 
+    borderWidth: 3, 
+    borderColor: '#ccc',
+    borderRadius: 10,
     paddingHorizontal: 10,
     gap: 30,
     padding: 20,
@@ -62,8 +72,10 @@ const styles = StyleSheet.create({
   textInput: {
     height: 45,
     width: '80%',
-    borderWidth: 2, // Use borderWidth (for thickness)
+    borderWidth: 2, 
     borderColor: '#ccc',
     color: 'black',
+    borderRadius: 5,
+    paddingHorizontal: 10,
   },
 });
