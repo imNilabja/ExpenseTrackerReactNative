@@ -36,30 +36,25 @@ const Register = () => {
   };
 
   const handleRegister = async () => {
-   try{
-     const Response = await fetch(
-      `http://${IP}/addUser`,
-      {
+    try {
+      const Response = await fetch(`http://${IP}/addUser`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          userName: Username, 
+        body: JSON.stringify({
+          userName: Username,
           userPassword: Password,
-          userEmail: Email
+          userEmail: Email,
         }),
-      },
-    );
+      });
 
-    setEmail('');
-    setPassword('');
-    setUsername('');
-   }catch(err){
-    console.log('Registration error', err);
-    Alert.alert('Network error', err.message || 'Request failed');
-   }
+      setEmail('');
+      setPassword('');
+      setUsername('');
+    } catch (err) {
+      console.log('Registration error', err);
+      Alert.alert('Network error', err.message || 'Request failed');
+    }
   };
-
-
 
   return (
     <SafeAreaView style={styles.container}>
@@ -87,7 +82,12 @@ const Register = () => {
           value={Email}
         />
 
-        <Button title="Register" color="#ce5a0dff" width="150" onPress={handleRegister}/>
+        <Button
+          title="Register"
+          color="#ce5a0dff"
+          width="150"
+          onPress={handleRegister}
+        />
         <Text style={{ fontSize: 10 }}>
           Already have an account?
           <Text style={{ color: 'blue' }} onPress={handleLogin}>

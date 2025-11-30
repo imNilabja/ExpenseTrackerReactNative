@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = () => {
   const navigation = useNavigation();
@@ -52,9 +53,12 @@ const Login = () => {
       const data = await Response.json();
       console.log(data);
       if(data){
+        await AsyncStorage.setItem('UserID', Username);
+        console.log("✅ Login successful, navigating to Explore.");
         navigation.navigate('Explore');
       }
     } catch (err) {
+       console.log("Login Failed !!!");
       console.log('Login error', err);
       Alert.alert('Network error', err.message || 'Request failed');
     }
