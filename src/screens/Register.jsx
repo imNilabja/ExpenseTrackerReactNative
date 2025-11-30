@@ -50,6 +50,7 @@ const Register = () => {
       setEmail('');
       setPassword('');
       setUsername('');
+      navigation.navigate('Login');
     } catch (err) {
       console.log('Registration error', err);
       Alert.alert('Network error', err.message || 'Request failed');
