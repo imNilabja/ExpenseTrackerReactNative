@@ -19,7 +19,7 @@ import Header from './src/screens/Header';
         <NavigationContainer>
                   <Header/>
 
-          <Stack.Navigator initialRouteName="Login">
+          <Stack.Navigator initialRouteName="Explore">
             <Stack.Screen name="Explore" component={Explore} options={{ headerShown: false }} />
             <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
             <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />

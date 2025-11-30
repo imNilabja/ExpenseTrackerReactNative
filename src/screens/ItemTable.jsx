@@ -25,17 +25,48 @@ const ItemTable = ({ month, year }) => {
     return 'localhost:8080';
   };
   const IP = getHost();
-
+// const IP = "13.232.40.105:8080";
   const [FoodData, setFoodData] = useState([]);
   const [StuffData, setStuffData] = useState([]);
   const [MescData, setMescData] = useState([]);
   const [TravelData, setTravelData] = useState([]);
+  const [Month, setMonth] = useState([]);
+  const [Year, setYear] = useState([]);
+
+    const months = [
+    { label: 'January', value: 'January' },
+    { label: 'February', value: 'February' },
+    { label: 'March', value: 'March' },
+    { label: 'April', value: 'April' },
+    { label: 'May', value: 'May' },
+    { label: 'June', value: 'June' },
+    { label: 'July', value: 'July' },
+    { label: 'August', value: 'August' },
+    { label: 'September', value: 'September' },
+    { label: 'October', value: 'October' },
+    { label: 'November', value: 'November' },
+    { label: 'December', value: 'December' },
+  ];
+
+  const years = [
+    { label: '2020', value: '2020' },
+    { label: '2021', value: '2021' },
+    { label: '2022', value: '2022' },
+    { label: '2023', value: '2023' },
+    { label: '2024', value: '2024' },
+    { label: '2025', value: '2025' },
+    { label: '2026', value: '2026' },
+    { label: '2027', value: '2027' },
+    { label: '2028', value: '2028' },
+    { label: '2029', value: '2029' },
+    { label: '2030', value: '2030' },
+  ];
 
   const fetchFoodData = useCallback(async () => {
     const user = await AsyncStorage.getItem('UserID');
     try {
       const response = await fetch(
-        `http://${IP}/getFoodByYear/${month}/${year}/${user}`,
+        `http://${IP}/getFoodByYear/${Month}/${Year}/${user}`,
       );
       const data = await response.json();
 

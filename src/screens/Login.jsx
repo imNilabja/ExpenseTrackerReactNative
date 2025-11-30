@@ -24,6 +24,7 @@ const Login = () => {
     };
 
     const IP = getHost();
+      // const IP = "13.232.40.105:8080";
 
   const handleUsername = e => {
     setUsername(e);

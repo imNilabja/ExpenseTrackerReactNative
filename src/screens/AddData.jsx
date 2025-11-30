@@ -23,6 +23,8 @@ const AddData = () => {
     return 'localhost:8080';
   };
   const IP = getHost();
+
+  // const IP = "13.232.40.105:8080";
   const navigation = useNavigation();
   const months = [
     { label: 'January', value: 'January' },
