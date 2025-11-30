@@ -11,7 +11,7 @@ const Explore = () => {
       <Text style={{ fontWeight: 'bold', fontSize: 25 }}>Expenses</Text>
       <View style={styles.dataDisplayContainer}>
         <ScrollView nestedScrollEnabled={true}>
-          <ItemTable userName="Nilabja_23" month="November" year="2025" />
+          <ItemTable month="November" year="2025" />
         </ScrollView>
        
       </View>

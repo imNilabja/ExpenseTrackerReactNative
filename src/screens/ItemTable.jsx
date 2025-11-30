@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   StyleSheet,
@@ -12,8 +13,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { FlatList } from 'react-native-gesture-handler';
 import { Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const ItemTable = ({ userName, month, year }) => {
+const ItemTable = ({ month, year }) => {
   const navigation = useNavigation();
   const getHost = () => {
     if (Platform.OS === 'android') {
@@ -28,15 +30,9 @@ const ItemTable = ({ userName, month, year }) => {
   const [StuffData, setStuffData] = useState([]);
   const [MescData, setMescData] = useState([]);
   const [TravelData, setTravelData] = useState([]);
-  const [ItemName, setItemName] = useState([]);
-  const [ItemCost, setItemCost] = useState([]);
-  const [ItemCategory, setItemCategory] = useState([]);
-  const [ItemMonth, setItemMonth] = useState([]);
-  const [ItemYear, setItemYear] = useState([]);
-
-  const user = userName;
 
   const fetchFoodData = useCallback(async () => {
+    const user = await AsyncStorage.getItem('UserID');
     try {
       const response = await fetch(
         `http://${IP}/getFoodByYear/${month}/${year}/${user}`,
@@ -51,11 +47,12 @@ const ItemTable = ({ userName, month, year }) => {
       // );
     } catch (error) {
       console.error('Error fetching food data:', error);
-      Alert.alert('Error', error.message);
     }
-  }, [IP, month, year, user]);
+  }, [IP, month, year]);
 
   const fetchStuffData = useCallback(async () => {
+    const user = await AsyncStorage.getItem('UserID');
+
     try {
       const response = await fetch(
         `http://${IP}/getStuffByYear/${month}/${year}/${user}`,
@@ -70,11 +67,12 @@ const ItemTable = ({ userName, month, year }) => {
       // );
     } catch (error) {
       console.error('Error fetching food data:', error);
-      Alert.alert('Error', error.message);
     }
-  }, [IP, month, year, user]);
+  }, [IP, month, year]);
 
   const fetchTravelData = useCallback(async () => {
+    const user = await AsyncStorage.getItem('UserID');
+
     try {
       const response = await fetch(
         `http://${IP}/getTravelByYear/${month}/${year}/${user}`,
@@ -91,9 +89,11 @@ const ItemTable = ({ userName, month, year }) => {
       console.error('Error fetching food data:', error);
       Alert.alert('Error', error.message);
     }
-  }, [IP, month, year, user]);
+  }, [IP, month, year]);
 
   const fetchMescData = useCallback(async () => {
+    const user = await AsyncStorage.getItem('UserID');
+
     try {
       const response = await fetch(
         `http://${IP}/getMescByYear/${month}/${year}/${user}`,
@@ -108,9 +108,8 @@ const ItemTable = ({ userName, month, year }) => {
       // );
     } catch (error) {
       console.error('Error fetching food data:', error);
-      Alert.alert('Error', error.message);
     }
-  }, [IP, month, year, user]);
+  }, [IP, month, year]);
 
   useEffect(() => {
     fetchFoodData();
