@@ -35,18 +35,27 @@ const ItemTable = () => {
 
   const { UserId } = useContext(AuthContext);
 
-
   const date = new Date();
 
-  const filterMonths=['January','February','March','April','May','June','July','August','September','October','November','December'];
-
-
+  const filterMonths = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
 
   const currentYear = date.getFullYear();
   const currentMonth = date.getMonth();
   const [Month, setMonth] = useState(filterMonths[currentMonth]);
   const [Year, setYear] = useState(String(currentYear));
-
 
   const months = [
     { label: 'January', value: 'January' },
@@ -157,13 +166,6 @@ const ItemTable = () => {
     }
   }, [IP, Month, Year]);
 
-  useEffect(() => {
-    fetchFoodData();
-    fetchMescData();
-    fetchStuffData();
-    fetchTravelData();
-  }, [fetchFoodData, Month, Year]);
-
   const handleDelete = async (id, category) => {
     const response = await fetch(`http://${IP}/deleteItem/${category}/${id}`, {
       // const response = await fetch(`http://localhost:8080/deleteItem/${item}/${id}`, {
@@ -187,6 +189,68 @@ const ItemTable = () => {
 
     handleDelete(id, category);
   };
+
+  const [foodSum, setfoodSum] = useState(0);
+  const [stuffSum, setstuffSum] = useState(0);
+  const [mescSum, setmescSum] = useState(0);
+  const [travelSum, settravelSum] = useState(0);
+
+  const handleFoodSum = async () => {
+    const response = await fetch(
+      `http://${IP}/ItemSum/food/${Month}/${Year}/${UserId}`,
+      {
+        method: 'GET',
+      },
+    );
+
+    const data = await response.json();
+    setfoodSum(data|| 0);
+  };
+
+  const handleStuffSum = async category => {
+    const response = await fetch(
+      `http://${IP}/ItemSum/stuff/${Month}/${Year}/${UserId}`,
+      {
+        method: 'GET',
+      },
+    );
+
+    const data = await response.json();
+    setstuffSum(data|| 0);
+  };
+  const handleTravelSum = async () => {
+    const response = await fetch(
+      `http://${IP}/ItemSum/travel/${Month}/${Year}/${UserId}`,
+      {
+        method: 'GET',
+      },
+    );
+
+    const data = await response.json();
+    settravelSum(data|| 0);
+  };
+  const handleMescSum = async category => {
+    const response = await fetch(
+      `http://${IP}/ItemSum/mesc/${Month}/${Year}/${UserId}`,
+      {
+        method: 'GET',
+      },
+    );
+
+    const data = await response.json();
+    setmescSum(data|| 0);
+  };
+
+  useEffect(() => {
+    fetchFoodData();
+    fetchMescData();
+    fetchStuffData();
+    fetchTravelData();
+    handleFoodSum();
+    handleStuffSum();
+    handleMescSum();
+    handleTravelSum();
+  }, [fetchFoodData, Month, Year,filterMonths[currentMonth]],currentYear);
 
   return (
     <View style={styles.container}>
@@ -285,6 +349,11 @@ const ItemTable = () => {
             item.id ? String(item.id) : String(index)
           }
         />
+        <View style={styles.tableBody}>
+          <Text style={styles.textBox}>Total sum</Text>
+          <Text style={styles.textBox}>-----</Text>
+          <Text style={styles.textBox}>₹{foodSum}</Text>
+        </View>
       </View>
       {/* for stuff */}
       <Text style={{ fontWeight: 'bold', fontSize: 20, marginTop: 20 }}>
@@ -339,6 +408,11 @@ const ItemTable = () => {
             item.id ? String(item.id) : String(index)
           }
         />
+        <View style={styles.tableBody}>
+          <Text style={styles.textBox}>Total sum</Text>
+          <Text style={styles.textBox}>-----</Text>
+          <Text style={styles.textBox}>₹{stuffSum}</Text>
+        </View>
       </View>
 
       {/* for Mesc */}
@@ -376,7 +450,7 @@ const ItemTable = () => {
                       item.mesc_id,
                       item.itemName,
                       item.itemCost,
-                      'food',
+                      'mesc',
                       item.month?.month,
                       item.month?.yearId,
                     )
@@ -394,6 +468,11 @@ const ItemTable = () => {
             item.id ? String(item.id) : String(index)
           }
         />
+        <View style={styles.tableBody}>
+          <Text style={styles.textBox}>Total sum</Text>
+          <Text style={styles.textBox}>-----</Text>
+          <Text style={styles.textBox}>₹{mescSum}</Text>
+        </View>
       </View>
 
       {/* for Travel */}
@@ -431,7 +510,7 @@ const ItemTable = () => {
                       item.travel_id,
                       item.itemName,
                       item.itemCost,
-                      'food',
+                      'travel',
                       item.month?.month,
                       item.month?.yearId,
                     )
@@ -449,6 +528,11 @@ const ItemTable = () => {
             item.id ? String(item.id) : String(index)
           }
         />
+        <View style={styles.tableBody}>
+          <Text style={styles.textBox}>Total sum</Text>
+          <Text style={styles.textBox}>-----</Text>
+          <Text style={styles.textBox}>₹{travelSum}</Text>
+        </View>
       </View>
     </View>
   );

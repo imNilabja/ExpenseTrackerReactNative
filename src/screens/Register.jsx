@@ -47,7 +47,7 @@ const Register = () => {
         }),
       });
 
-      const exist=await resp.json;
+      const exist = await resp.json;
 
       if (!exist) {
         const Response = await fetch(`http://${IP}/addUser`, {
@@ -67,9 +67,8 @@ const Register = () => {
       } else {
         setExist(true);
         setTimeout(() => {
-                  setExist(false);
-
-        },2000);
+          setExist(false);
+        }, 2000);
       }
     } catch (err) {
       console.log('Registration error', err);
@@ -106,10 +105,10 @@ const Register = () => {
           width="150"
           onPress={handleRegister}
         />
-      {  Exist?(<Text style={{ fontSize:  }}>
-          User Exist!!!
-        </Text>):(null)}
-        <Text style={{ fontSize: 10}}>
+        {Exist ? (
+          <Text style={{ fontSize: 10, color: 'yellow' }}>User Exist!!!</Text>
+        ) : null}
+        <Text style={{ fontSize: 10 }}>
           Already have an account?
           <Text style={{ color: 'blue' }} onPress={handleLogin}>
             Login
