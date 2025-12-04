@@ -8,32 +8,47 @@ import {
   Alert,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import { FlatList } from 'react-native-gesture-handler';
 import { Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Dropdown } from 'react-native-element-dropdown';
+import AuthContext from '../context/AuthContext';
 
-const ItemTable = ({ month, year }) => {
+const ItemTable = () => {
   const navigation = useNavigation();
-  const getHost = () => {
-    if (Platform.OS === 'android') {
-      // Android emulator -> host machine
-      return '10.0.2.2:8080';
-    }
-    return 'localhost:8080';
-  };
-  const IP = getHost();
-// const IP = "13.232.40.105:8080";
+  // const getHost = () => {
+  //   if (Platform.OS === 'android') {
+  //     // Android emulator -> host machine
+  //     return '10.0.2.2:8080';
+  //   }
+  //   return 'localhost:8080';
+  // };
+  // const IP = getHost();
+  const IP = '13.127.135.62:8080';
   const [FoodData, setFoodData] = useState([]);
   const [StuffData, setStuffData] = useState([]);
   const [MescData, setMescData] = useState([]);
   const [TravelData, setTravelData] = useState([]);
-  const [Month, setMonth] = useState([]);
-  const [Year, setYear] = useState([]);
 
-    const months = [
+  const { UserId } = useContext(AuthContext);
+
+
+  const date = new Date();
+
+  const filterMonths=['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+
+
+  const currentYear = date.getFullYear();
+  const currentMonth = date.getMonth();
+  const [Month, setMonth] = useState(filterMonths[currentMonth]);
+  const [Year, setYear] = useState(String(currentYear));
+
+
+  const months = [
     { label: 'January', value: 'January' },
     { label: 'February', value: 'February' },
     { label: 'March', value: 'March' },
@@ -63,10 +78,10 @@ const ItemTable = ({ month, year }) => {
   ];
 
   const fetchFoodData = useCallback(async () => {
-    const user = await AsyncStorage.getItem('UserID');
+    // const user = await AsyncStorage.getItem('UserID');
     try {
       const response = await fetch(
-        `http://${IP}/getFoodByYear/${Month}/${Year}/${user}`,
+        `http://${IP}/getFoodByYear/${Month}/${Year}/${UserId}`,
       );
       const data = await response.json();
 
@@ -79,14 +94,14 @@ const ItemTable = ({ month, year }) => {
     } catch (error) {
       console.error('Error fetching food data:', error);
     }
-  }, [IP, month, year]);
+  }, [IP, Month, Year]);
 
   const fetchStuffData = useCallback(async () => {
-    const user = await AsyncStorage.getItem('UserID');
+    // const user = await AsyncStorage.getItem('UserID');
 
     try {
       const response = await fetch(
-        `http://${IP}/getStuffByYear/${month}/${year}/${user}`,
+        `http://${IP}/getStuffByYear/${Month}/${Year}/${UserId}`,
       );
       const data = await response.json();
 
@@ -99,14 +114,14 @@ const ItemTable = ({ month, year }) => {
     } catch (error) {
       console.error('Error fetching food data:', error);
     }
-  }, [IP, month, year]);
+  }, [IP, Month, Year]);
 
   const fetchTravelData = useCallback(async () => {
-    const user = await AsyncStorage.getItem('UserID');
+    // const user = await AsyncStorage.getItem('UserID');
 
     try {
       const response = await fetch(
-        `http://${IP}/getTravelByYear/${month}/${year}/${user}`,
+        `http://${IP}/getTravelByYear/${Month}/${Year}/${UserId}`,
       );
       const data = await response.json();
 
@@ -120,14 +135,14 @@ const ItemTable = ({ month, year }) => {
       console.error('Error fetching food data:', error);
       Alert.alert('Error', error.message);
     }
-  }, [IP, month, year]);
+  }, [IP, Month, Year]);
 
   const fetchMescData = useCallback(async () => {
-    const user = await AsyncStorage.getItem('UserID');
+    // const user = await AsyncStorage.getItem('UserID');
 
     try {
       const response = await fetch(
-        `http://${IP}/getMescByYear/${month}/${year}/${user}`,
+        `http://${IP}/getMescByYear/${Month}/${Year}/${UserId}`,
       );
       const data = await response.json();
 
@@ -140,14 +155,14 @@ const ItemTable = ({ month, year }) => {
     } catch (error) {
       console.error('Error fetching food data:', error);
     }
-  }, [IP, month, year]);
+  }, [IP, Month, Year]);
 
   useEffect(() => {
     fetchFoodData();
     fetchMescData();
     fetchStuffData();
     fetchTravelData();
-  }, [fetchFoodData, month, year]);
+  }, [fetchFoodData, Month, Year]);
 
   const handleDelete = async (id, category) => {
     const response = await fetch(`http://${IP}/deleteItem/${category}/${id}`, {
@@ -175,6 +190,48 @@ const ItemTable = ({ month, year }) => {
 
   return (
     <View style={styles.container}>
+      <View style={{ flexDirection: 'row', gap: 10 }}>
+        <View
+          style={{
+            padding: 16,
+            width: '45%',
+            height: 40,
+            borderWidth: 2,
+            borderColor: '#ccc',
+            borderRadius: 5,
+          }}
+        >
+          <Dropdown
+            style={styles.dropdown}
+            data={years}
+            labelField="label"
+            valueField="value"
+            placeholder="Select Year"
+            value={Year}
+            onChange={item => setYear(item.value)}
+          />
+        </View>
+        <View
+          style={{
+            padding: 16,
+            width: '45%',
+            height: 40,
+            borderWidth: 2,
+            borderColor: '#ccc',
+            borderRadius: 5,
+          }}
+        >
+          <Dropdown
+            style={styles.dropdown}
+            data={months}
+            labelField="label"
+            valueField="value"
+            placeholder="Select Month"
+            value={Month}
+            onChange={item => setMonth(item.value)}
+          />
+        </View>
+      </View>
       {/* for food */}
       <Text style={{ fontWeight: 'bold', fontSize: 20, marginTop: 20 }}>
         Food

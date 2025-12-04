@@ -13,16 +13,17 @@ const Register = () => {
   const [Username, setUsername] = useState('');
   const [Password, setPassword] = useState('');
   const [Email, setEmail] = useState('');
-  const getHost = () => {
-    if (Platform.OS === 'android') {
-      // Android emulator -> host machine
-      return '10.0.2.2:8080';
-    }
-    return 'localhost:8080';
-  };
+  
+  // const getHost = () => {
+  //   if (Platform.OS === 'android') {
+  //     // Android emulator -> host machine
+  //     return '10.0.2.2:8080';
+  //   }
+  //   return 'localhost:8080';
+  // };
 
-  const IP = getHost();
-// const IP = "13.232.40.105:8080";
+  // const IP = getHost();
+const IP = "13.127.135.62:8080";
   const handleUsername = e => {
     setUsername(e);
   };

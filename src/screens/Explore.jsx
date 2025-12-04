@@ -3,22 +3,27 @@ import React from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import ItemTable from './ItemTable';
 import { useNavigation } from '@react-navigation/native';
+import Header from '../screens/Header.jsx';
+
 
 const Explore = () => {
   const navigation = useNavigation();
   return (
+   <>
+     <Header />
     <ScrollView contentContainerStyle={styles.container}>
+     
       <Text style={{ fontWeight: 'bold', fontSize: 25 }}>Expenses</Text>
       <View style={styles.dataDisplayContainer}>
         <ScrollView nestedScrollEnabled={true}>
-          <ItemTable month="November" year="2025" />
+          <ItemTable/>
         </ScrollView>
        
       </View>
-      <Button title="Add Entry" color="#ce5a0dff" width="150" onPress={()=>{
+      <Button title="Add Entry" color="#07641fff" width="150" onPress={()=>{
         navigation.navigate("AddData");
       }}/>
-    </ScrollView>
+    </ScrollView></>
   );
 };
 
@@ -34,10 +39,10 @@ const styles = StyleSheet.create({
  
   },
   dataDisplayContainer: {
-    minHeight: '70%',
-    height: '70%',
+    minHeight: '60%',
+    height: '65%',
     width: '85%',
-    marginTop: 20,
+    marginTop: 10,
     borderWidth: 2,
     borderColor: '#ccc',
     borderRadius: 10,

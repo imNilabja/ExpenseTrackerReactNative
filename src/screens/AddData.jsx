@@ -13,18 +13,19 @@ import { useNavigation } from '@react-navigation/native';
 import { Dropdown } from 'react-native-element-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute } from '@react-navigation/native';
-
+import Header from '../screens/Header.jsx';
+import Loading from './Loading';
 const AddData = () => {
-  const getHost = () => {
-    if (Platform.OS === 'android') {
-      // Android emulator -> host machine
-      return '10.0.2.2:8080';
-    }
-    return 'localhost:8080';
-  };
-  const IP = getHost();
+  // const getHost = () => {
+  //   if (Platform.OS === 'android') {
+  //     // Android emulator -> host machine
+  //     return '10.0.2.2:8080';
+  //   }
+  //   return 'localhost:8080';
+  // };
+  // const IP = getHost();
 
-  // const IP = "13.232.40.105:8080";
+  const IP = "13.127.135.62:8080";
   const navigation = useNavigation();
   const months = [
     { label: 'January', value: 'January' },
@@ -74,8 +75,10 @@ const AddData = () => {
   const handleCost = e => {
     setItemCost(e);
   };
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
+    setLoading(true);
     const User = await AsyncStorage.getItem('UserID');
     if (ItemCategory.toLowerCase() === 'food') {
       const response = await fetch(
@@ -94,6 +97,8 @@ const AddData = () => {
       );
 
       if (response.ok) {
+        setLoading(false);
+
         console.log('✅ Food item added successfully!');
       } else {
         console.error('❌ Failed to add item.');
@@ -115,6 +120,7 @@ const AddData = () => {
       );
 
       if (response.ok) {
+        setLoading(false);
         console.log('✅ Food item added successfully!');
       } else {
         console.error('❌ Failed to add item.');
@@ -136,6 +142,8 @@ const AddData = () => {
       );
 
       if (response.ok) {
+        setLoading(false);
+
         console.log('✅ Food item added successfully!');
       } else {
         console.error('❌ Failed to add item.');
@@ -157,6 +165,8 @@ const AddData = () => {
       );
 
       if (response.ok) {
+        setLoading(false);
+
         console.log('✅ Food item added successfully!');
       } else {
         console.error('❌ Failed to add item.');
@@ -184,99 +194,108 @@ const AddData = () => {
   }, [route.params]);
 
   return (
-    <View style={styles.container}>
-      <Text style={{ fontWeight: 'bold', fontSize: 25 }}>Add Data</Text>
+    <>
+      {loading?(
+      <Loading />
+      ):(
+      <>
+        <Header />
+        <View style={styles.container}>
+          <Text style={{ fontWeight: 'bold', fontSize: 25 }}>Add Data</Text>
 
-      <View style={styles.dataDisplayContainer}>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Enter item name"
-          value={ItemName}
-          onChangeText={handleName}
-        />
-        <TextInput
-          style={styles.textInput}
-          placeholder="Enter item cost"
-          value={ItemCost}
-          onChangeText={handleCost}
-        />
-        <View
-          style={{
-            padding: 16,
-            width: '80%',
-            borderWidth: 2,
-            borderColor: '#ccc',
-            borderRadius: 5,
-          }}
-        >
-          <Dropdown
-            style={styles.dropdown}
-            data={categories}
-            labelField="label"
-            valueField="value"
-            placeholder="Select Category"
-            value={ItemCategory}
-            onChange={item => setItemCategory(item.value)}
-          />
-        </View>
-        <View
-          style={{
-            padding: 16,
-            width: '80%',
-            borderWidth: 2,
-            borderColor: '#ccc',
-            borderRadius: 5,
-          }}
-        >
-          <Dropdown
-            style={styles.dropdown}
-            data={months}
-            labelField="label"
-            valueField="value"
-            placeholder="Select Month"
-            value={ItemMonth}
-            onChange={item => setItemMonth(item.value)}
-          />
-        </View>
-        <View
-          style={{
-            padding: 16,
-            width: '80%',
-            borderWidth: 2,
-            borderColor: '#ccc',
-            borderRadius: 5,
-          }}
-        >
-          <Dropdown
-            style={styles.dropdown}
-            data={years}
-            labelField="label"
-            valueField="value"
-            placeholder="Select Year"
-            value={ItemYear}
-            onChange={item => setItemYear(item.value)}
-          />
-        </View>
+          <View style={styles.dataDisplayContainer}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="Enter item name"
+              value={ItemName}
+              onChangeText={handleName}
+            />
+            <TextInput
+              style={styles.textInput}
+              placeholder="Enter item cost"
+              value={ItemCost}
+              onChangeText={handleCost}
+            />
+            <View
+              style={{
+                padding: 16,
+                width: '80%',
+                borderWidth: 2,
+                borderColor: '#ccc',
+                borderRadius: 5,
+              }}
+            >
+              <Dropdown
+                style={styles.dropdown}
+                data={categories}
+                labelField="label"
+                valueField="value"
+                placeholder="Select Category"
+                value={ItemCategory}
+                onChange={item => setItemCategory(item.value)}
+              />
+            </View>
+            <View
+              style={{
+                padding: 16,
+                width: '80%',
+                borderWidth: 2,
+                borderColor: '#ccc',
+                borderRadius: 5,
+              }}
+            >
+              <Dropdown
+                style={styles.dropdown}
+                data={months}
+                labelField="label"
+                valueField="value"
+                placeholder="Select Month"
+                value={ItemMonth}
+                onChange={item => setItemMonth(item.value)}
+              />
+            </View>
+            <View
+              style={{
+                padding: 16,
+                width: '80%',
+                borderWidth: 2,
+                borderColor: '#ccc',
+                borderRadius: 5,
+              }}
+            >
+              <Dropdown
+                style={styles.dropdown}
+                data={years}
+                labelField="label"
+                valueField="value"
+                placeholder="Select Year"
+                value={ItemYear}
+                onChange={item => setItemYear(item.value)}
+              />
+            </View>
 
-        <Button
-          title="Add Entry"
-          color="#c97a04ff"
-          width="150"
-          borderRadius={20}
-          onPress={() => {
-            handleSubmit();
-          }}
-        />
-      </View>
-      <Button
-        title="Expenses"
-        color="#ce5a0dff"
-        width="150"
-        onPress={() => {
-          navigation.navigate('Explore');
-        }}
-      />
-    </View>
+            <Button
+              title="Add Entry"
+              color="#07641fff"
+              width="150"
+              borderRadius={20}
+              onPress={() => {
+                handleSubmit();
+              }}
+            />
+          </View>
+          <Button
+            title="Expenses"
+            color="#07641fff"
+            width="150"
+            onPress={() => {
+              navigation.navigate('Explore');
+            }}
+          />
+        </View>
+      </>
+      )}
+    </>
   );
 };
 

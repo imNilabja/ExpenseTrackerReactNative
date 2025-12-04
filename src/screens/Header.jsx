@@ -1,32 +1,37 @@
 /* eslint-disable react-native/no-inline-styles */
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
-import { Color } from 'react-native/types_generated/Libraries/Animated/AnimatedExports';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import AuthContext from '../context/AuthContext';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Header = () => {
-    const navigation = useNavigation();
+  const navigation = useNavigation();
+  const { LogOut } = useContext(AuthContext);
   return (
     <View
       style={{
         height: 90,
+        width: '100%',
         backgroundColor: '#e23e07ff',
-        justifyContent: 'center',
-        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        paddingTop: 10,
       }}
     >
-      <Text style={{ fontWeight: 'bold', fontSize: 20, marginTop: 30 }}>
+      <Text style={{ fontWeight: 'bold', fontSize: 20, marginTop: 30,color:'white' }}>
         Expense Tracker
       </Text>
       <TouchableOpacity
         onPress={async () => {
+          LogOut();
           await AsyncStorage.removeItem('UserID');
           navigation.navigate('Login');
         }}
         style={{ position: 'absolute', right: 20, top: 48 }}
       >
-        <Text style={{ fontSize: 16, fontStyle: 'bold', Color: 'yellow' }}>
+        <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'yellow', }}>
           Logout
         </Text>
       </TouchableOpacity>
