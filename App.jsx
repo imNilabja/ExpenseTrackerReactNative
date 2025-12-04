@@ -11,6 +11,7 @@ import Header from './src/screens/Header';
 import AuthState from './src/context/AuthState';
 import AuthContext from './src/context/AuthContext';
 import Opening from './src/screens/Opening';
+import Toast from 'react-native-toast-message';
 
 const Stack = createNativeStackNavigator();
 const AppScreen = () => {
@@ -18,6 +19,7 @@ const AppScreen = () => {
 
   return (
     <NavigationContainer>
+      <Toast />
       <Stack.Navigator>
         {UserId ? (
           <>

@@ -13,7 +13,7 @@ const Register = () => {
   const [Username, setUsername] = useState('');
   const [Password, setPassword] = useState('');
   const [Email, setEmail] = useState('');
-  
+  const [Exist, setExist] = useState(false);
   // const getHost = () => {
   //   if (Platform.OS === 'android') {
   //     // Android emulator -> host machine
@@ -23,7 +23,7 @@ const Register = () => {
   // };
 
   // const IP = getHost();
-const IP = "13.127.135.62:8080";
+  const IP = '13.127.135.62:8080';
   const handleUsername = e => {
     setUsername(e);
   };
@@ -39,20 +39,38 @@ const IP = "13.127.135.62:8080";
 
   const handleRegister = async () => {
     try {
-      const Response = await fetch(`http://${IP}/addUser`, {
+      const resp = await fetch(`http://${IP}/existingUser/${Username}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userName: Username,
-          userPassword: Password,
-          userEmail: Email,
         }),
       });
 
-      setEmail('');
-      setPassword('');
-      setUsername('');
-      navigation.navigate('Login');
+      const exist=await resp.json;
+
+      if (!exist) {
+        const Response = await fetch(`http://${IP}/addUser`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userName: Username,
+            userPassword: Password,
+            userEmail: Email,
+          }),
+        });
+
+        setEmail('');
+        setPassword('');
+        setUsername('');
+        navigation.navigate('Login');
+      } else {
+        setExist(true);
+        setTimeout(() => {
+                  setExist(false);
+
+        },2000);
+      }
     } catch (err) {
       console.log('Registration error', err);
       Alert.alert('Network error', err.message || 'Request failed');
@@ -69,7 +87,6 @@ const IP = "13.127.135.62:8080";
           onChangeText={handleUsername}
           value={Username}
         />
-
         <TextInput
           style={styles.textInput}
           placeholder="password"
@@ -77,21 +94,22 @@ const IP = "13.127.135.62:8080";
           value={Password}
           password
         />
-
         <TextInput
           style={styles.textInput}
           placeholder="email"
           onChangeText={handleEmail}
           value={Email}
         />
-
         <Button
           title="Register"
           color="#ce5a0dff"
           width="150"
           onPress={handleRegister}
         />
-        <Text style={{ fontSize: 10 }}>
+      {  Exist?(<Text style={{ fontSize:  }}>
+          User Exist!!!
+        </Text>):(null)}
+        <Text style={{ fontSize: 10}}>
           Already have an account?
           <Text style={{ color: 'blue' }} onPress={handleLogin}>
             Login
@@ -112,7 +130,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   inputBox: {
-    height: '40%',
+    height: '45%',
     width: '60%',
     borderWidth: 3,
     borderColor: '#ccc',
