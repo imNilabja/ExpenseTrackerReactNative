@@ -38,10 +38,7 @@ const AppScreen = () => {
           </>
         ) : (
           <>
-         
-           
-            {Net?(<>
-              <Stack.Screen
+            <Stack.Screen
               name="Opening"
               component={Opening}
               options={{ headerShown: false }}
@@ -56,14 +53,11 @@ const AppScreen = () => {
               component={Register}
               options={{ headerShown: false }}
             />
-            </>
-            ):(
             <Stack.Screen
               name="Error"
               component={Error}
               options={{ headerShown: false }}
             />
-            )}
           </>
         )}
       </Stack.Navigator>

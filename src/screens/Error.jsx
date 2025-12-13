@@ -4,37 +4,8 @@ import FastImage from 'react-native-fast-image';
 import AuthContext from '../context/AuthContext';
 
 const Error = () => {
-  // const getHost = () => {
-  //   if (Platform.OS === 'android') {
-  //     // Android emulator -> host machine
-  //     return '10.0.2.2:8080';
-  //   }
-  //   return 'localhost:8080';
-  // };
-  // const IP = getHost();
-  const IP = '3.110.156.6:8080';
-  const { network,noNetwork } = useContext(AuthContext);
 
-  const checkNetwork = useCallback(async () => {
-    try {
-      const response = await fetch(`http://${IP}/test`);
-      const data = await response.json();
-
-      if (data === true) {
-        network();
-      } else {
-        console.log('cannot Connected to server');
-        noNetwork()
-      }
-    } catch (e) {
-      console.log('cannot Connected to server');
-      noNetwork();
-    }
-  }, [IP, network,noNetwork]);
-
-  useEffect(() => {
-    checkNetwork();
-  }, [checkNetwork]);
+  
 
   return (
     <View style={styles.container}>

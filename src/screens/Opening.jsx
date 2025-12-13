@@ -1,24 +1,65 @@
 import { StyleSheet, Text, View, Platform } from 'react-native';
 import React from 'react';
 import FastImage from 'react-native-fast-image';
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useCallback } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import AuthContext from '../context/AuthContext';
 const Opening = () => {
   const navigation = useNavigation();
   const { UserId } = useContext(AuthContext);
+  const { Net } = useContext(AuthContext);
+  const { network, noNetwork } = useContext(AuthContext);
+  // const getHost = () => {
+  //   if (Platform.OS === 'android') {
+  //     // Android emulator -> host machine
+  //     return '10.0.2.2:8080';
+  //   }
+  //   return 'localhost:8080';
+  // };
+  // const IP = getHost();
+  const IP = '3.110.156.61:8080';
+
+  const fetchWithTimeout = (url, options = {}, timeout = 10000) => {
+  return Promise.race([
+    fetch(url, options),
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Request timed out')), timeout)
+    ),
+  ]);
+};
+  const checkNetwork = useCallback(async () => {
+    try {
+      const response = await fetchWithTimeout(`http://${IP}/test`,{},10000);
+      const data = await response.json(); // data = { success: true }
+
+      if (data.success === true) {
+        network(); // Net = true
+      } else {
+        noNetwork(); // Net = false
+      }
+    } catch (e) {
+      noNetwork(); // Net = false
+    }
+  }, [network, noNetwork]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (UserId) {
-        navigation.replace('Explore');
-      } else {
-        navigation.replace('Login');
-      }
-    }, 3000);
+    if (Net === true || Net === false) return; 
+    checkNetwork(); // initial check
+    const interval = setInterval(checkNetwork, 500); 
+    return () => clearInterval(interval);
+  }, [Net, checkNetwork]);
 
-    return () => clearTimeout(timer);
-  }, [UserId, navigation]);
+  
+  useEffect(() => {
+    if (Net === null) return; 
+    if (UserId) {
+      navigation.replace('Explore');
+    } else if (Net === true) {
+      navigation.replace('Login');
+    } else {
+      navigation.replace('Error');
+    }
+  }, [UserId, Net, navigation]);
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Spendr</Text>
