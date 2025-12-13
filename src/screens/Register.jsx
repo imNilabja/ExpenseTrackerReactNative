@@ -1,12 +1,20 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-native/no-inline-styles */
-import { StyleSheet, Text, View, Platform, Alert } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Platform,
+  Alert,
+  TouchableOpacity,
+} from 'react-native';
 import React from 'react';
 import { TextInput } from 'react-native';
 import { useState } from 'react';
 import { Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Image } from 'react-native';
 
 const Register = () => {
   const navigation = useNavigation();
@@ -14,6 +22,8 @@ const Register = () => {
   const [Password, setPassword] = useState('');
   const [Email, setEmail] = useState('');
   const [Exist, setExist] = useState(false);
+    const [Eye, setEye] = useState(true)
+
   // const getHost = () => {
   //   if (Platform.OS === 'android') {
   //     // Android emulator -> host machine
@@ -23,7 +33,7 @@ const Register = () => {
   // };
 
   // const IP = getHost();
-  const IP = '13.127.135.62:8080';
+  const IP = '3.110.156.62:8080';
   const handleUsername = e => {
     setUsername(e);
   };
@@ -47,7 +57,7 @@ const Register = () => {
         }),
       });
 
-      const exist = await resp.json;
+      const exist = await resp.json();
 
       if (!exist) {
         const Response = await fetch(`http://${IP}/addUser`, {
@@ -78,6 +88,11 @@ const Register = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+        <Image
+              style={styles.icon}
+              source={require('../../assets/register.png')}
+              
+            />
       <View style={styles.inputBox}>
         <Text style={{ fontWeight: 'bold', fontSize: 25 }}>Register</Text>
         <TextInput
@@ -86,25 +101,55 @@ const Register = () => {
           onChangeText={handleUsername}
           value={Username}
         />
-        <TextInput
-          style={styles.textInput}
-          placeholder="password"
-          onChangeText={handlePassword}
-          value={Password}
-          password
-        />
+         <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    position: 'relative',
+                  }}
+                >
+                  <TextInput
+                    secureTextEntry={Eye}
+                    style={[styles.textInput, { paddingRight: '35' }]}
+                    placeholder="password"
+                    onChangeText={handlePassword}
+                    value={Password}
+                  />
+                { Eye?( <TouchableOpacity style={{  position: 'absolute',right: '10',}} onPress={()=>{setEye(false)}}>
+                    <Image
+                      style={{
+                        height: 20,
+                        width: 20,
+                      
+                      }}
+                      source={require('../../assets/open_eye.png')}
+                    />
+                  </TouchableOpacity>):(
+                     <TouchableOpacity style={{  position: 'absolute',right: '10',}} onPress={()=>{setEye(true)}}>
+                    <Image
+                      style={{
+                        height: 20,
+                        width: 20,
+                      
+                      }}
+                      source={require('../../assets/hidden_eye.png')}
+                    />
+                  </TouchableOpacity>
+                  )}
+                </View>
         <TextInput
           style={styles.textInput}
           placeholder="email"
           onChangeText={handleEmail}
           value={Email}
         />
-        <Button
-          title="Register"
-          color="#ce5a0dff"
-          width="150"
-          onPress={handleRegister}
-        />
+        <TouchableOpacity onPress={handleRegister}>
+          <Image
+            style={styles.button}
+            source={require('../../assets/sign-up.png')}
+          />
+        </TouchableOpacity>
         {Exist ? (
           <Text style={{ fontSize: 10, color: 'yellow' }}>User Exist!!!</Text>
         ) : null}
@@ -147,5 +192,16 @@ const styles = StyleSheet.create({
     color: 'black',
     borderRadius: 5,
     paddingHorizontal: 10,
+  },
+  icon: {
+    width: 90,
+    height: 90,
+    marginBottom: 20,
+    
+  },
+  button: {
+    width: 80,
+    height: 70,
+
   },
 });

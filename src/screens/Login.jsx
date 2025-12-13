@@ -1,6 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 
-import { StyleSheet, Text, View, Platform, Alert } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Platform,
+  Alert,
+  TouchableOpacity,
+} from 'react-native';
 import React, { useContext } from 'react';
 import { TextInput } from 'react-native';
 import { useState } from 'react';
@@ -12,12 +19,14 @@ import AuthState from '../context/AuthState';
 import AuthContext from '../context/AuthContext';
 import Loading from './Loading';
 import Toast from 'react-native-toast-message';
+import { Image } from 'react-native';
 
 const Login = () => {
   const navigation = useNavigation();
   const [Username, setUsername] = useState('');
   const [Password, setPassword] = useState('');
   const { Login } = useContext(AuthContext);
+  const [Eye, setEye] = useState(true)
 
   // const getHost = () => {
 
@@ -30,7 +39,7 @@ const Login = () => {
 
   // const IP = getHost();
 
-  const IP = '13.127.135.62:8080';
+  const IP = '3.110.156.62:8080';
 
   const handleUsername = e => {
     setUsername(e);
@@ -47,7 +56,6 @@ const Login = () => {
   const handleLogin = async e => {
     setLoading(true);
     try {
-       
       const Response = await fetch(
         `http://${IP}/loginUser/${Username}/${Password}`,
         {
@@ -58,7 +66,7 @@ const Login = () => {
       );
       const data = await Response.json();
       if (!data) {
-        setLoading(false)
+        setLoading(false);
         setExist(true);
 
         setTimeout(() => {
@@ -67,7 +75,7 @@ const Login = () => {
         return;
         // navigation.navigate('Register');
       }
-     
+
       console.log(data);
       if (data) {
         Login(Username);
@@ -91,10 +99,14 @@ const Login = () => {
     }
   };
 
+
+
+
   return loading ? (
     <Loading />
   ) : (
     <SafeAreaView style={styles.container}>
+      <Image style={styles.icon} source={require('../../assets/profile.png')} />
       <View style={styles.inputBox}>
         <Text style={{ fontWeight: 'bold', fontSize: 25 }}>Login</Text>
         <TextInput
@@ -104,19 +116,50 @@ const Login = () => {
           value={Username}
         />
 
-        <TextInput
-          style={styles.textInput}
-          placeholder="password"
-          onChangeText={handlePassword}
-          value={Password}
-        />
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            position: 'relative',
+          }}
+        >
+          <TextInput
+            secureTextEntry={Eye}
+            style={[styles.textInput, { paddingRight: '35' }]}
+            placeholder="password"
+            onChangeText={handlePassword}
+            value={Password}
+          />
+        { Eye?( <TouchableOpacity style={{  position: 'absolute',right: '10',}} onPress={()=>{setEye(false)}}>
+            <Image
+              style={{
+                height: 20,
+                width: 20,
+              
+              }}
+              source={require('../../assets/open_eye.png')}
+            />
+          </TouchableOpacity>):(
+             <TouchableOpacity style={{  position: 'absolute',right: '10',}} onPress={()=>{setEye(true)}}>
+            <Image
+              style={{
+                height: 20,
+                width: 20,
+              
+              }}
+              source={require('../../assets/hidden_eye.png')}
+            />
+          </TouchableOpacity>
+          )}
+        </View>
 
-        <Button
-          title="Login"
-          color="#ce5a0dff"
-          width="150"
-          onPress={handleLogin}
-        />
+        <TouchableOpacity onPress={handleLogin}>
+          <Image
+            style={styles.button}
+            source={require('../../assets/login_button.png')}
+          />
+        </TouchableOpacity>
 
         {Exist ? (
           <Text style={{ fontSize: 12, color: 'yellow' }}>
@@ -163,5 +206,15 @@ const styles = StyleSheet.create({
     color: 'black',
     borderRadius: 5,
     paddingHorizontal: 10,
+  },
+  icon: {
+    width: 100,
+    height: 100,
+    marginBottom: 20,
+  },
+  button: {
+    width: 80,
+    height: 70,
+    marginBottom: 10,
   },
 });

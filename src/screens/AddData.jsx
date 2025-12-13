@@ -5,7 +5,7 @@ import {
   View,
   TextInput,
   Button,
-  Platform,
+  TouchableOpacity,
 } from 'react-native';
 import React, { use } from 'react';
 import { useState, useEffect } from 'react';
@@ -15,6 +15,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute } from '@react-navigation/native';
 import Header from '../screens/Header.jsx';
 import Loading from './Loading';
+import Error from './Error.jsx';
+import { Image } from 'react-native';
+
 const AddData = () => {
   // const getHost = () => {
   //   if (Platform.OS === 'android') {
@@ -25,7 +28,7 @@ const AddData = () => {
   // };
   // const IP = getHost();
 
-  const IP = "13.127.135.62:8080";
+  const IP = '3.110.156.62:8080';
   const navigation = useNavigation();
   const months = [
     { label: 'January', value: 'January' },
@@ -78,105 +81,109 @@ const AddData = () => {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    setLoading(true);
-    const User = await AsyncStorage.getItem('UserID');
-    if (ItemCategory.toLowerCase() === 'food') {
-      const response = await fetch(
-        `http://${IP}/addFood/${ItemMonth}/${ItemYear}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+    try {
+      setLoading(true);
+      const User = await AsyncStorage.getItem('UserID');
+      if (ItemCategory.toLowerCase() === 'food') {
+        const response = await fetch(
+          `http://${IP}/addFood/${ItemMonth}/${ItemYear}`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              itemName: ItemName,
+              itemCost: ItemCost,
+              user: User,
+            }),
           },
-          body: JSON.stringify({
-            itemName: ItemName,
-            itemCost: ItemCost,
-            user: User,
-          }),
-        },
-      );
+        );
 
-      if (response.ok) {
-        setLoading(false);
+        if (response.ok) {
+          setLoading(false);
 
-        console.log('✅ Food item added successfully!');
-      } else {
-        console.error('❌ Failed to add item.');
-      }
-    } else if (ItemCategory.toLowerCase() === 'mesc') {
-      const response = await fetch(
-        `http://${IP}/addMesc/${ItemMonth}/${ItemYear}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+          console.log('✅ Food item added successfully!');
+        } else {
+          console.error('❌ Failed to add item.');
+        }
+      } else if (ItemCategory.toLowerCase() === 'mesc') {
+        const response = await fetch(
+          `http://${IP}/addMesc/${ItemMonth}/${ItemYear}`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              itemName: ItemName,
+              itemCost: ItemCost,
+              user: User,
+            }),
           },
-          body: JSON.stringify({
-            itemName: ItemName,
-            itemCost: ItemCost,
-            user: User,
-          }),
-        },
-      );
+        );
 
-      if (response.ok) {
-        setLoading(false);
-        console.log('✅ Food item added successfully!');
-      } else {
-        console.error('❌ Failed to add item.');
-      }
-    } else if (ItemCategory.toLowerCase() === 'stuff') {
-      const response = await fetch(
-        `http://${IP}/addStuff/${ItemMonth}/${ItemYear}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+        if (response.ok) {
+          setLoading(false);
+          console.log('✅ Food item added successfully!');
+        } else {
+          console.error('❌ Failed to add item.');
+        }
+      } else if (ItemCategory.toLowerCase() === 'stuff') {
+        const response = await fetch(
+          `http://${IP}/addStuff/${ItemMonth}/${ItemYear}`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              itemName: ItemName,
+              itemCost: ItemCost,
+              user: User,
+            }),
           },
-          body: JSON.stringify({
-            itemName: ItemName,
-            itemCost: ItemCost,
-            user: User,
-          }),
-        },
-      );
+        );
 
-      if (response.ok) {
-        setLoading(false);
+        if (response.ok) {
+          setLoading(false);
 
-        console.log('✅ Food item added successfully!');
-      } else {
-        console.error('❌ Failed to add item.');
-      }
-    } else if (ItemCategory.toLowerCase() === 'travel') {
-      const response = await fetch(
-        `http://${IP}/addTravel/${ItemMonth}/${ItemYear}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+          console.log('✅ Food item added successfully!');
+        } else {
+          console.error('❌ Failed to add item.');
+        }
+      } else if (ItemCategory.toLowerCase() === 'travel') {
+        const response = await fetch(
+          `http://${IP}/addTravel/${ItemMonth}/${ItemYear}`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              itemName: ItemName,
+              itemCost: ItemCost,
+              user: User,
+            }),
           },
-          body: JSON.stringify({
-            itemName: ItemName,
-            itemCost: ItemCost,
-            user: User,
-          }),
-        },
-      );
+        );
 
-      if (response.ok) {
-        setLoading(false);
+        if (response.ok) {
+          setLoading(false);
 
-        console.log('✅ Food item added successfully!');
-      } else {
-        console.error('❌ Failed to add item.');
+          console.log('✅ Food item added successfully!');
+        } else {
+          console.error('❌ Failed to add item.');
+        }
       }
+      setItemCategory('');
+      setItemCost('');
+      setItemMonth('');
+      setItemName('');
+      setItemYear('');
+    } catch (err) {
+      <Error />;
     }
-    setItemCategory('');
-    setItemCost('');
-    setItemMonth('');
-    setItemName('');
-    setItemYear('');
   };
 
   const route = useRoute();
@@ -195,105 +202,106 @@ const AddData = () => {
 
   return (
     <>
-      {loading?(
-      <Loading />
-      ):(
-      <>
-        <Header />
-        <View style={styles.container}>
-          <Text style={{ fontWeight: 'bold', fontSize: 25 }}>Add Data</Text>
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          <Header />
+          <View style={styles.container}>
+            <Text style={{ fontWeight: 'bold', fontSize: 25 }}>Add Data</Text>
 
-          <View style={styles.dataDisplayContainer}>
-            <TextInput
-              style={styles.textInput}
-              placeholder="Enter item name"
-              value={ItemName}
-              onChangeText={handleName}
-            />
-            <TextInput
-              style={styles.textInput}
-              placeholder="Enter item cost"
-              value={ItemCost}
-              onChangeText={handleCost}
-            />
-            <View
-              style={{
-                padding: 16,
-                width: '80%',
-                borderWidth: 2,
-                borderColor: '#ccc',
-                borderRadius: 5,
-              }}
-            >
-              <Dropdown
-                style={styles.dropdown}
-                data={categories}
-                labelField="label"
-                valueField="value"
-                placeholder="Select Category"
-                value={ItemCategory}
-                onChange={item => setItemCategory(item.value)}
+            <View style={styles.dataDisplayContainer}>
+              <TextInput
+                style={styles.textInput}
+                placeholder="Enter item name"
+                value={ItemName}
+                onChangeText={handleName}
               />
-            </View>
-            <View
-              style={{
-                padding: 16,
-                width: '80%',
-                borderWidth: 2,
-                borderColor: '#ccc',
-                borderRadius: 5,
-              }}
-            >
-              <Dropdown
-                style={styles.dropdown}
-                data={months}
-                labelField="label"
-                valueField="value"
-                placeholder="Select Month"
-                value={ItemMonth}
-                onChange={item => setItemMonth(item.value)}
+              <TextInput
+                style={styles.textInput}
+                placeholder="Enter item cost"
+                value={ItemCost}
+                onChangeText={handleCost}
               />
-            </View>
-            <View
-              style={{
-                padding: 16,
-                width: '80%',
-                borderWidth: 2,
-                borderColor: '#ccc',
-                borderRadius: 5,
-              }}
-            >
-              <Dropdown
-                style={styles.dropdown}
-                data={years}
-                labelField="label"
-                valueField="value"
-                placeholder="Select Year"
-                value={ItemYear}
-                onChange={item => setItemYear(item.value)}
-              />
-            </View>
+              <View
+                style={{
+                  padding: 16,
+                  width: '80%',
+                  borderWidth: 2,
+                  borderColor: '#ccc',
+                  borderRadius: 5,
+                }}
+              >
+                <Dropdown
+                  style={styles.dropdown}
+                  data={categories}
+                  labelField="label"
+                  valueField="value"
+                  placeholder="Select Category"
+                  value={ItemCategory}
+                  onChange={item => setItemCategory(item.value)}
+                />
+              </View>
+              <View
+                style={{
+                  padding: 16,
+                  width: '80%',
+                  borderWidth: 2,
+                  borderColor: '#ccc',
+                  borderRadius: 5,
+                }}
+              >
+                <Dropdown
+                  style={styles.dropdown}
+                  data={months}
+                  labelField="label"
+                  valueField="value"
+                  placeholder="Select Month"
+                  value={ItemMonth}
+                  onChange={item => setItemMonth(item.value)}
+                />
+              </View>
+              <View
+                style={{
+                  padding: 16,
+                  width: '80%',
+                  borderWidth: 2,
+                  borderColor: '#ccc',
+                  borderRadius: 5,
+                }}
+              >
+                <Dropdown
+                  style={styles.dropdown}
+                  data={years}
+                  labelField="label"
+                  valueField="value"
+                  placeholder="Select Year"
+                  value={ItemYear}
+                  onChange={item => setItemYear(item.value)}
+                />
+              </View>
 
+              <TouchableOpacity
+                onPress={() => {
+                  handleSubmit();
+                }}
+              >
+                <Image
+                  style={styles.button}
+                  source={require('../../assets/add_button.png')}
+                />
+              </TouchableOpacity>
+            </View>
             <Button
-              title="Add Entry"
+              title="Expenses"
               color="#07641fff"
               width="150"
-              borderRadius={20}
               onPress={() => {
-                handleSubmit();
+                navigation.navigate('Explore');
               }}
             />
           </View>
-          <Button
-            title="Expenses"
-            color="#07641fff"
-            width="150"
-            onPress={() => {
-              navigation.navigate('Explore');
-            }}
-          />
-        </View>
-      </>
+        </>
       )}
     </>
   );
@@ -329,5 +337,9 @@ const styles = StyleSheet.create({
     color: 'black',
     borderRadius: 5,
     paddingHorizontal: 10,
+  },
+  button: {
+    width: 90,
+    height: 60,
   },
 });

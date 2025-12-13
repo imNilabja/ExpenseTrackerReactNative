@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const AuthState=(props)=>{
 
     const [UserId, setUserId] = useState("");
+    const [Net, setNet] = useState(false);
     const Login=async(user)=>{
       setUserId(user);
     //   await AsyncStorage.setItem("userId",UserId);
@@ -15,8 +16,15 @@ const AuthState=(props)=>{
       setUserId(null);
     //   await AsyncStorage.removeItem("userId");
     }
+
+    const network=()=>{
+       setNet(true);
+    }
+     const noNetwork = () => {
+    setNet(false);
+  };
     return (
-    <AuthContext.Provider value={{UserId,Login,LogOut}}>
+    <AuthContext.Provider value={{UserId,Login,LogOut,network,Net,noNetwork}}>
          {props.children}
     </AuthContext.Provider>
 

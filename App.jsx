@@ -11,11 +11,12 @@ import Header from './src/screens/Header';
 import AuthState from './src/context/AuthState';
 import AuthContext from './src/context/AuthContext';
 import Opening from './src/screens/Opening';
+import Error from './src/screens/Error';
 import Toast from 'react-native-toast-message';
 
 const Stack = createNativeStackNavigator();
 const AppScreen = () => {
-  const { UserId } = useContext(AuthContext);
+  const { UserId, Net } = useContext(AuthContext);
 
   return (
     <NavigationContainer>
@@ -37,7 +38,10 @@ const AppScreen = () => {
           </>
         ) : (
           <>
-            <Stack.Screen
+         
+           
+            {Net?(<>
+              <Stack.Screen
               name="Opening"
               component={Opening}
               options={{ headerShown: false }}
@@ -52,6 +56,14 @@ const AppScreen = () => {
               component={Register}
               options={{ headerShown: false }}
             />
+            </>
+            ):(
+            <Stack.Screen
+              name="Error"
+              component={Error}
+              options={{ headerShown: false }}
+            />
+            )}
           </>
         )}
       </Stack.Navigator>

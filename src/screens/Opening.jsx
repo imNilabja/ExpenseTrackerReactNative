@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View, Platform } from 'react-native';
 import React from 'react';
 import FastImage from 'react-native-fast-image';
-import { useEffect,useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import AuthContext from '../context/AuthContext';
 const Opening = () => {
-    const navigation = useNavigation();
+  const navigation = useNavigation();
   const { UserId } = useContext(AuthContext);
 
   useEffect(() => {
@@ -15,7 +15,7 @@ const Opening = () => {
       } else {
         navigation.replace('Login');
       }
-    }, 3000); 
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, [UserId, navigation]);
@@ -34,7 +34,7 @@ const Opening = () => {
           resizeMode={FastImage.resizeMode.contain}
         />
       </View>
-      
+
       <Text style={styles.footer}>Clarity for your cash.</Text>
     </View>
   );
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#e23e07ff',
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-between', 
+    justifyContent: 'space-between',
     flexDirection: 'column',
     paddingVertical: 50,
   },
@@ -64,6 +64,8 @@ const styles = StyleSheet.create({
     width: '50%',
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 4,
+    borderColor: 'black',
   },
   title: {
     fontWeight: 'bold',
@@ -76,12 +78,9 @@ const styles = StyleSheet.create({
       default: 'System',
     }),
   },
-  footer:{
-    color:'white',
+  footer: {
+    color: 'white',
     fontWeight: '600',
-    marginBottom:25
-
-    
-    
-  }
+    marginBottom: 25,
+  },
 });
