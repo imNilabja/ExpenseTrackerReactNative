@@ -27,7 +27,7 @@ const ItemTable = () => {
   //   return 'localhost:8080';
   // };
   // const IP = getHost();
-  const IP = '3.110.156.62:8080';
+  const IP = '43.204.103.88:8080';
   const [FoodData, setFoodData] = useState([]);
   const [StuffData, setStuffData] = useState([]);
   const [MescData, setMescData] = useState([]);

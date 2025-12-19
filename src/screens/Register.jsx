@@ -33,7 +33,7 @@ const Register = () => {
   // };
 
   // const IP = getHost();
-  const IP = '3.110.156.62:8080';
+  const IP = '43.204.103.88:8080';
   const handleUsername = e => {
     setUsername(e);
   };

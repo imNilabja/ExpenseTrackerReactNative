@@ -17,7 +17,7 @@ const Opening = () => {
   //   return 'localhost:8080';
   // };
   // const IP = getHost();
-  const IP = '3.110.156.61:8080';
+  const IP = '43.204.103.88:8080';
 
   const fetchWithTimeout = (url, options = {}, timeout = 10000) => {
   return Promise.race([
