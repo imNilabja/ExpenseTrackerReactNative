@@ -51,7 +51,10 @@ const Opening = () => {
 
   
   useEffect(() => {
-    if (Net === null) return; 
+  if (Net === null) return;
+
+  // Add 2-second splash delay
+  const timer = setTimeout(() => {
     if (UserId) {
       navigation.replace('Explore');
     } else if (Net === true) {
@@ -59,7 +62,11 @@ const Opening = () => {
     } else {
       navigation.replace('Error');
     }
-  }, [UserId, Net, navigation]);
+  }, 3000); 
+
+  return () => clearTimeout(timer);
+}, [UserId, Net, navigation]);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Spendr</Text>
