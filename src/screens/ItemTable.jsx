@@ -32,8 +32,9 @@ const ItemTable = () => {
   const [StuffData, setStuffData] = useState([]);
   const [MescData, setMescData] = useState([]);
   const [TravelData, setTravelData] = useState([]);
+  const [TimeStamp, setTimeStamp] = useState('');
 
-  const { UserId } = useContext(AuthContext);
+  const { UserId, handleLastUpdateTime, Time } = useContext(AuthContext);
 
   const date = new Date();
 
@@ -175,6 +176,7 @@ const ItemTable = () => {
     fetchMescData();
     fetchStuffData();
     fetchTravelData();
+    handleLastUpdateTime();
   };
 
   const handleEdit = async (id, itemName, itemCost, category, month, year) => {
@@ -204,7 +206,7 @@ const ItemTable = () => {
     );
 
     const data = await response.json();
-    setfoodSum(data|| 0);
+    setfoodSum(data || 0);
   };
 
   const handleStuffSum = async category => {
@@ -216,7 +218,7 @@ const ItemTable = () => {
     );
 
     const data = await response.json();
-    setstuffSum(data|| 0);
+    setstuffSum(data || 0);
   };
   const handleTravelSum = async () => {
     const response = await fetch(
@@ -227,7 +229,7 @@ const ItemTable = () => {
     );
 
     const data = await response.json();
-    settravelSum(data|| 0);
+    settravelSum(data || 0);
   };
   const handleMescSum = async category => {
     const response = await fetch(
@@ -238,10 +240,15 @@ const ItemTable = () => {
     );
 
     const data = await response.json();
-    setmescSum(data|| 0);
+    setmescSum(data || 0);
   };
 
-  useEffect(() => {
+  const getTime = async() => {
+    const resp=await AsyncStorage.getItem('timeStamp');
+     setTimeStamp(resp);
+  };
+
+useEffect(() => {
     fetchFoodData();
     fetchMescData();
     fetchStuffData();
@@ -250,7 +257,8 @@ const ItemTable = () => {
     handleStuffSum();
     handleMescSum();
     handleTravelSum();
-  }, [fetchFoodData, Month, Year,filterMonths[currentMonth]],currentYear);
+    getTime();
+  }, [fetchFoodData, Month, Year, filterMonths[currentMonth], Time]); 
 
   return (
     <View style={styles.container}>
@@ -534,6 +542,7 @@ const ItemTable = () => {
           <Text style={styles.textBox}>₹{travelSum}</Text>
         </View>
       </View>
+      <Text style={{fontSize:10.5, color:'yellow',alignSelf: 'flex-start',flexWrap:'wrap',marginHorizontal:15}}>Last Updated on: {TimeStamp}</Text>
     </View>
   );
 };
@@ -547,12 +556,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     minHeight: 400,
     gap: 20,
+ 
   },
   tableContainer: {
     width: '96%',
     flex: 1,
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: 'white',
     borderRadius: 5,
     overflow: 'hidden',
     minHeight: 200,

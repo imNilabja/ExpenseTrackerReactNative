@@ -7,7 +7,7 @@ import {
   Button,
   TouchableOpacity,
 } from 'react-native';
-import React, { use } from 'react';
+import React, { use, useContext } from 'react';
 import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Dropdown } from 'react-native-element-dropdown';
@@ -17,6 +17,7 @@ import Header from '../screens/Header.jsx';
 import Loading from './Loading';
 import Error from './Error.jsx';
 import { Image } from 'react-native';
+import AuthContext from '../context/AuthContext';
 
 const AddData = () => {
   // const getHost = () => {
@@ -71,14 +72,14 @@ const AddData = () => {
   const [ItemMonth, setItemMonth] = useState('');
   const [ItemYear, setItemYear] = useState('');
   const [ItemCategory, setItemCategory] = useState('');
-
+  const [loading, setLoading] = useState(false);
+  const { handleLastUpdateTime, Time } = useContext(AuthContext);
   const handleName = e => {
     setItemName(e);
   };
   const handleCost = e => {
     setItemCost(e);
   };
-  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
     try {
@@ -104,6 +105,7 @@ const AddData = () => {
           setLoading(false);
 
           console.log('✅ Food item added successfully!');
+          await handleLastUpdateTime();
         } else {
           console.error('❌ Failed to add item.');
         }
@@ -126,6 +128,7 @@ const AddData = () => {
         if (response.ok) {
           setLoading(false);
           console.log('✅ Food item added successfully!');
+          await handleLastUpdateTime();
         } else {
           console.error('❌ Failed to add item.');
         }
@@ -149,6 +152,7 @@ const AddData = () => {
           setLoading(false);
 
           console.log('✅ Food item added successfully!');
+         await handleLastUpdateTime();
         } else {
           console.error('❌ Failed to add item.');
         }
@@ -172,6 +176,7 @@ const AddData = () => {
           setLoading(false);
 
           console.log('✅ Food item added successfully!');
+          await handleLastUpdateTime();
         } else {
           console.error('❌ Failed to add item.');
         }
